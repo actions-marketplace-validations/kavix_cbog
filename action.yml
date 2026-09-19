@@ -1,5 +1,5 @@
-name: 'cbog: Community Bot for Open-source Governance'
-description: 'Enterprise open-source triage bot with modular plugins (/lgtm, /merge, /claim, auto-size, PR title lint, and universal scaffolding)'
+name: 'cbog'
+description: 'Enterprise open-source triage bot with slash commands, contributor claiming, PR sizing, and governance scaffolding'
 author: 'kavix'
 branding:
   icon: 'shield'

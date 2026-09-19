@@ -1,15 +1,14 @@
-# 🛡️ cbog: Community Bot for Open-source Governance
+# cbog: Community Bot for Open-source Governance
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/kavix/cbog)](https://goreportcard.com/report/github.com/kavix/cbog)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Marketplace](https://img.shields.io/badge/Marketplace-cbog-blue.svg)](https://github.com/marketplace/actions/cbog-community-bot-for-open-source-governance)
+[![Marketplace](https://img.shields.io/badge/Marketplace-cbog-blue.svg)](https://github.com/marketplace/actions/cbog)
 
-> **Supercharge your open-source repo in 60 seconds.**  
-> Automated triage, `/lgtm`, `/merge`, contributor self-assignment (`/claim`), PR size labeling, and one-click community guidelines scaffolding.
+> Supercharge any open-source repository in 60 seconds with automated triage, contributor self-assignment (`/claim`), `/lgtm`, `/merge`, and a 1-click governance scaffolder.
 
 ---
 
-## ⚡ Quickstart (1 Step, Zero Config)
+## Quickstart (1 Step, Zero Config)
 
 To add `cbog` to your repository, create **`.github/workflows/cbog.yml`**:
 
@@ -49,88 +48,93 @@ jobs:
           mode: ${{ inputs.mode || 'bot' }}
 ```
 
-**That's it! 🎉**  
-`cbog` is now active on your issues and pull requests.
+`cbog` will immediately begin managing your issues and pull requests.
 
 ---
 
-## 🚀 Auto-Generate Your Community Guidelines (1 Click)
+## 1-Click Governance Scaffolder
 
-Missing `CONTRIBUTING.md`, PR checklists, or modern Issue Forms? Let `cbog` write them for you:
+Generate a complete, enterprise-grade open-source governance suite in 30 seconds:
 
-1. In your repository, click the **Actions** tab.
+1. In your repository, navigate to the **Actions** tab.
 2. Select **cbog** from the sidebar.
-3. Click **Run workflow** $\rightarrow$ select **`scaffold-oss-docs`** $\rightarrow$ click **Run workflow**.
+3. Click **Run workflow** -> select **`scaffold-oss-docs`** -> click **Run workflow**.
 
-`cbog` will detect your project stack (Go, Python, TypeScript, Rust, etc.) and open an automated Pull Request containing:
-- 📄 **`CONTRIBUTING.md`** (Tailored build instructions + slash command cheat sheet)
-- 📋 **`.github/PULL_REQUEST_TEMPLATE.md`** (Structured PR checklist)
-- 🐛 **`.github/ISSUE_TEMPLATE/`** (Modern YAML GitHub Issue Forms for Bug Reports & Feature Requests)
-- ⚙️ **`.github/cbog.yml`** (Ready-to-tweak configuration file)
+`cbog` will:
+- **Auto-enable GitHub Discussions** on your repository.
+- **Auto-enable automatic branch deletion** on pull request merge.
+- Auto-detect your programming language (Go, Python, Rust, Node.js, Java) and open a Pull Request with all 10 standard community files:
+  - `CONTRIBUTING.md` (Language-tailored build instructions and command reference)
+  - `CODE_OF_CONDUCT.md` (Contributor Covenant v2.1)
+  - `SECURITY.md` (Confidential vulnerability reporting policy)
+  - `SUPPORT.md` (Community assistance guidelines)
+  - `LICENSE` (Supports `mit`, `apache-2.0`, `bsd-3-clause`, `gpl-3.0`, `mpl-2.0`)
+  - `.github/PULL_REQUEST_TEMPLATE.md` (Structured PR checklist)
+  - `.github/ISSUE_TEMPLATE/bug_report.yml` (Structured Bug Report form)
+  - `.github/ISSUE_TEMPLATE/feature_request.yml` (Structured Feature Request form)
+  - `.github/ISSUE_TEMPLATE/config.yml` (Blank issue redirection to Discussions)
+  - `.github/cbog.yml` (Ready-to-tweak plugin configuration)
 
 ---
 
-## 💬 Contributor & Maintainer Commands
+## Contributor & Maintainer Commands
 
 Comment on any Issue or Pull Request to trigger commands:
 
 | Command | What it does | Who can use it |
 | :--- | :--- | :--- |
-| **`/claim`** | Assigns the issue to you so you can start working on it | Everyone |
-| **`/unclaim`** | Releases the issue back to the community if you're busy | Assignee |
-| **`/assign [@user]`** | Assigns yourself or mentioned collaborators | Everyone |
-| **`/unassign [@user]`** | Removes assignees | Everyone |
-| **`/lgtm`** | Marks PR with `lgtm` ("Looks Good To Me") | Maintainers (non-author) |
-| **`/lgtm cancel`** | Removes `lgtm` label | Maintainers |
-| **`/approve`** | Submits formal GitHub PR approval + `approved` label | Maintainers (non-author) |
-| **`/approve cancel`** | Removes approval label | Maintainers |
-| **`/hold`** | Adds `do-not-merge/hold` to prevent accidental merges | Everyone |
-| **`/hold cancel`** | Removes hold label | Everyone |
-| **`/merge`** | Safely merges the PR (verifies CI checks & branch protection) | Maintainers |
-| **`/merge squash`** | Merges with squash (or `merge`, `rebase`) | Maintainers |
-| **`/close`** / **`/reopen`** | Closes or reopens an issue/PR | Author / Maintainers |
-| **`/help`** | Displays this cheat sheet directly in the issue/PR | Everyone |
+| `/claim` | Self-assign an open issue to start working on it | Everyone |
+| `/unclaim` | Release an assigned issue back to the community | Assigned Contributor |
+| `/assign [@user]` | Assign yourself or mentioned collaborators | Everyone |
+| `/unassign [@user]` | Remove assignees | Everyone |
+| `/lgtm` | Mark PR with `lgtm` ("Looks Good To Me") | Maintainers (non-author) |
+| `/lgtm cancel` | Remove `lgtm` label | Maintainers |
+| `/approve` | Submit formal GitHub PR Review approval + `approved` label | Maintainers (non-author) |
+| `/approve cancel` | Remove approval label | Maintainers |
+| `/hold` | Add `do-not-merge/hold` to prevent accidental merges | Everyone |
+| `/hold cancel` | Remove hold label | Everyone |
+| `/merge` | Safely merge the PR once all status checks pass | Maintainers |
+| `/merge squash` | Merge using squash (or `merge`, `rebase`) | Maintainers |
+| `/close` / `/reopen` | Close or reopen an issue or PR | Author / Maintainers |
+| `/help` | Print command reference cheat sheet | Everyone |
 
 ---
 
-## 🧩 Included Features & Plugins
+## Included Plugins & Automations
 
 | Feature | Description |
 | :--- | :--- |
-| 🏷️ **Auto PR Sizing** | Automatically tags PRs with `size/XS` (<10 lines), `size/S`, `size/M`, `size/L`, or `size/XL` (>500 lines). |
-| ✍️ **PR Title Linter** | Validates PR titles against Conventional Commits (`feat:`, `fix:`, `docs:`) and reports GitHub status checks. |
-| 👋 **First-Timer Welcome** | Greets first-time contributors on their first issue or PR with helpful links. |
-| 📂 **Auto-Labeler** | Automatically applies area labels based on modified paths (e.g. `docs/**` $\rightarrow$ `area/docs`). |
-| ⚡ **Instant Go Engine** | Runs as a compiled static binary in **<100ms** with zero dependencies. |
+| **Auto PR Sizing** | Automatically labels PRs with `size/XS` (<10 lines), `size/S`, `size/M`, `size/L`, or `size/XL` (>500 lines). |
+| **PR Title Linter** | Validates PR titles against Conventional Commits (`feat:`, `fix:`, `docs:`) and sets GitHub status checks. |
+| **First-Timer Welcome** | Greets first-time contributors on their first issue or PR with helpful links. |
+| **Path-Based Auto-Labeler** | Automatically categorizes PRs by file paths (e.g. `docs/**` -> `documentation`). |
+| **90-Day Stale Triage** | Automatically identifies and marks inactive issues/PRs with `lifecycle/stale`. |
+| **Fast Go Engine** | Runs as a static compiled binary in under 100ms with zero runtime dependencies. |
 
 ---
 
-## ⚙️ Customization (Optional)
+## Configuration (`.github/cbog.yml`)
 
-If you want to customize messages, sizing thresholds, or disable specific plugins, add **`.github/cbog.yml`**:
+You can customize or disable any plugin by adding `.github/cbog.yml`:
 
 ```yaml
 version: 1
 
 plugins:
-  # Slash commands: /lgtm, /approve, /hold, /merge
   commands:
     enabled: true
     allow_self_approval: false
     default_merge_method: squash # squash, merge, or rebase
 
-  # Contributor self-assignment: /claim and /unclaim
   claim:
     enabled: true
     max_issues_per_user: 3
 
-  # Welcome greeting for first-time contributors
   welcome:
     enabled: true
-    issue_message: "👋 Welcome @{{.User}}! Thanks for opening an issue in {{.Repo}}!"
-    pr_message: "🎉 Welcome @{{.User}}! Thanks for opening your first PR in {{.Repo}}!"
+    issue_message: "Welcome @{{.User}}. Thank you for opening an issue in {{.Repo}}!"
+    pr_message: "Welcome @{{.User}}. Thank you for submitting your first PR in {{.Repo}}!"
 
-  # Automatic PR size labeling
   size:
     enabled: true
     xs: 10
@@ -139,38 +143,43 @@ plugins:
     l: 500
     xl: 1000
 
-  # Conventional commit title checker
   title_lint:
     enabled: true
     types: ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"]
 
-  # Automatic area labels
   auto_label:
     enabled: true
     rules:
-      - label: "area/docs"
+      - label: "documentation"
         paths: ["docs/**", "**/*.md"]
-      - label: "area/ci"
-        paths: [".github/**"]
+      - label: "enhancement"
+        paths: ["pkg/plugins/**", "pkg/commands/**"]
 ```
 
 ---
 
-## 📦 How to Publish This Action (For Maintainers)
+## Publishing to GitHub Marketplace
 
-1. Create a public repository named `cbog` under your GitHub account:
-   ```bash
-   cd /Users/kavindu2/Desktop/cbog
-   git remote add origin https://github.com/kavix/cbog.git
-   git push -u origin main
-   ```
-2. On GitHub, navigate to **Releases** $\rightarrow$ **Draft a new release**.
-3. Choose tag **`v1.0.0`** (and point **`v1`** to it).
+1. Ensure your repository is **public**.
+2. Navigate to **Releases** -> **Draft a new release**.
+3. Create release tag **`v1.0.0`** (and point **`v1`** to it).
 4. Check **"Publish this Action to the GitHub Marketplace"**.
-5. Pick categories (*Community*, *Automation*) and click **Publish release**.
+5. Select categories (**Community**, **Automation**) and click **Publish release**.
 
 ---
 
-## 📄 License
+## Local Development & Testing
 
-[MIT](LICENSE) © 2026 kavix
+```bash
+# Run test suite
+go test -v ./...
+
+# Compile binary
+go build -o bin/cbog ./cmd/bot
+```
+
+---
+
+## License
+
+[MIT](LICENSE) (c) 2026 kavix

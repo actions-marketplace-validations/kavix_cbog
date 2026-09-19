@@ -1,0 +1,35 @@
+name: Contributor Bot & OSS Helper
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Run mode (bot or scaffold-oss-docs)'
+        required: true
+        default: 'bot'
+        type: choice
+        options:
+          - bot
+          - scaffold-oss-docs
+
+jobs:
+  contributor-bot:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+      statuses: read
+      checks: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Contributor Bot
+        uses: kavindu/contributor-bot-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mode: ${{ inputs.mode || 'bot' }}
+          merge-method: 'squash'

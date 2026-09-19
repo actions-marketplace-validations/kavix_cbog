@@ -1,0 +1,66 @@
+name: 'Contributor Bot & Universal OSS Scaffolder'
+description: 'Fast Go-powered bot supporting /lgtm, /approve, /hold, /merge, /assign and automated OSS community scaffolding'
+author: 'Kavindu'
+branding:
+  icon: 'command'
+  color: 'blue'
+
+inputs:
+  github-token:
+    description: 'GitHub Token with issues, pull-requests, and contents write permissions'
+    required: true
+    default: ${{ github.token }}
+  mode:
+    description: 'Execution mode: bot (processes comments) or scaffold-oss-docs (generates community guidelines PR)'
+    required: false
+    default: 'bot'
+  merge-method:
+    description: 'Default merge method for /merge (squash, merge, rebase)'
+    required: false
+    default: 'squash'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Go (if needed for fallback)
+      shell: bash
+      run: |
+        OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        ARCH="$(uname -m)"
+        case "$ARCH" in
+          x86_64) ARCH="amd64" ;;
+          aarch64|arm64) ARCH="arm64" ;;
+        esac
+
+        BIN="${{ github.action_path }}/bin/bot-${OS}-${ARCH}"
+        if [ ! -f "$BIN" ] && ! command -v go &> /dev/null; then
+          echo "Binary $BIN not bundled, installing Go runtime..."
+          # Install Go if not present in runner environment
+        fi
+
+    - name: Execute Contributor Bot
+      shell: bash
+      env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
+        INPUT_MODE: ${{ inputs.mode }}
+        INPUT_MERGE_METHOD: ${{ inputs.merge-method }}
+        GITHUB_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        ARCH="$(uname -m)"
+        case "$ARCH" in
+          x86_64) ARCH="amd64" ;;
+          aarch64|arm64) ARCH="arm64" ;;
+        esac
+
+        BIN="${GITHUB_ACTION_PATH}/bin/bot-${OS}-${ARCH}"
+        if [ -f "$BIN" ]; then
+          chmod +x "$BIN"
+          "$BIN"
+        elif [ -f "${GITHUB_ACTION_PATH}/bin/bot" ]; then
+          chmod +x "${GITHUB_ACTION_PATH}/bin/bot"
+          "${GITHUB_ACTION_PATH}/bin/bot"
+        else
+          echo "Running from source with go run..."
+          go run "${GITHUB_ACTION_PATH}/cmd/bot/main.go"
+        fi

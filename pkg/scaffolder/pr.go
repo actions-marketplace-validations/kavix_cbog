@@ -8,8 +8,26 @@ import (
 	"github.com/google/go-github/v60/github"
 )
 
+// EnableRepoFeatures automatically enables GitHub Discussions and automatic branch cleanup.
+func EnableRepoFeatures(ctx context.Context, client *github.Client, owner, repo string) {
+	hasDiscussions := true
+	deleteBranch := true
+	_, _, err := client.Repositories.Edit(ctx, owner, repo, &github.Repository{
+		HasDiscussions:      &hasDiscussions,
+		DeleteBranchOnMerge: &deleteBranch,
+	})
+	if err != nil {
+		log.Printf("Note: could not update repository settings (may require repository admin permissions): %v", err)
+	} else {
+		log.Println("Successfully enabled GitHub Discussions and auto-deletion of head branches.")
+	}
+}
+
 // CreateScaffoldPR creates a new branch, commits the generated files, and opens a PR.
 func CreateScaffoldPR(ctx context.Context, client *github.Client, owner, repo string, files map[string]string) (string, error) {
+	// Enable discussions and branch cleanup
+	EnableRepoFeatures(ctx, client, owner, repo)
+
 	// 1. Get repository details for default branch
 	repoObj, _, err := client.Repositories.Get(ctx, owner, repo)
 	if err != nil {

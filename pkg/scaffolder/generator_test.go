@@ -9,7 +9,7 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 	stacks := []TechStack{StackGo, StackNode, StackPython, StackRust, StackUniversal}
 
 	for _, stack := range stacks {
-		scaff := NewScaffolder(stack, "kavix")
+		scaff := NewScaffolder(stack, "kavix", "mit")
 		files, err := scaff.GenerateFiles()
 		if err != nil {
 			t.Fatalf("failed to generate files for stack %s: %v", stack, err)
@@ -20,6 +20,7 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 			"CONTRIBUTING.md",
 			"CODE_OF_CONDUCT.md",
 			"SECURITY.md",
+			"SUPPORT.md",
 			"LICENSE",
 			".github/PULL_REQUEST_TEMPLATE.md",
 			".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -42,6 +43,29 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 		contrib := files["CONTRIBUTING.md"]
 		if !strings.Contains(contrib, "/lgtm") || !strings.Contains(contrib, "/merge") || !strings.Contains(contrib, "/claim") {
 			t.Errorf("CONTRIBUTING.md is missing command cheat sheet for stack %s", stack)
+		}
+	}
+}
+
+func TestLicenseTypes(t *testing.T) {
+	licenses := map[string]string{
+		"mit":          "MIT License",
+		"apache-2.0":   "Apache License",
+		"bsd-3-clause": "BSD 3-Clause License",
+		"gpl-3.0":      "GNU GENERAL PUBLIC LICENSE",
+		"mpl-2.0":      "Mozilla Public License",
+	}
+
+	for licKey, expectedSubstring := range licenses {
+		scaff := NewScaffolder(StackGo, "kavix", licKey)
+		files, err := scaff.GenerateFiles()
+		if err != nil {
+			t.Fatalf("failed to generate for license %s: %v", licKey, err)
+		}
+
+		licContent, ok := files["LICENSE"]
+		if !ok || !strings.Contains(licContent, expectedSubstring) {
+			t.Errorf("license %s expected to contain %q, got:\n%s", licKey, expectedSubstring, licContent)
 		}
 	}
 }

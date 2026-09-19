@@ -51,7 +51,8 @@ func main() {
 		stack := scaffolder.DetectStack(cwd)
 		log.Printf("Detected project tech stack: %s", stack)
 
-		scaff := scaffolder.NewScaffolder(stack, owner)
+		licenseType := getEnv("INPUT_LICENSE", "mit")
+		scaff := scaffolder.NewScaffolder(stack, owner, licenseType)
 		files, err := scaff.GenerateFiles()
 		if err != nil {
 			log.Fatalf("Failed to generate scaffold files: %v", err)

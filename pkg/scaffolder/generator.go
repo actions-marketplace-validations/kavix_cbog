@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"embed"
 	"fmt"
+	"strings"
 	"text/template"
 	"time"
 )
@@ -13,12 +14,16 @@ var templateFS embed.FS
 
 // Scaffolder generates community health files.
 type Scaffolder struct {
-	Stack TechStack
-	Owner string
+	Stack       TechStack
+	Owner       string
+	LicenseType string
 }
 
-func NewScaffolder(stack TechStack, owner string) *Scaffolder {
-	return &Scaffolder{Stack: stack, Owner: owner}
+func NewScaffolder(stack TechStack, owner, licenseType string) *Scaffolder {
+	if licenseType == "" {
+		licenseType = "mit"
+	}
+	return &Scaffolder{Stack: stack, Owner: owner, LicenseType: strings.ToLower(licenseType)}
 }
 
 // GenerateFiles generates all community guidelines and issue templates.
@@ -59,9 +64,34 @@ func (s *Scaffolder) GenerateFiles() (map[string]string, error) {
 		files["SECURITY.md"] = string(sec)
 	}
 
-	// 4. LICENSE (MIT)
-	licTmpl, err := templateFS.ReadFile("templates/license.txt")
+	// 4. SUPPORT.md
+	supportTmpl, err := templateFS.ReadFile("templates/support.md")
 	if err == nil {
+		sTmpl, err := template.New("support").Parse(string(supportTmpl))
+		if err == nil {
+			var sBuf bytes.Buffer
+			sData := struct {
+				Owner string
+				Repo  string
+			}{
+				Owner: s.Owner,
+				Repo:  "project",
+			}
+			if err := sTmpl.Execute(&sBuf, sData); err == nil {
+				files["SUPPORT.md"] = sBuf.String()
+			}
+		}
+	}
+
+	// 5. LICENSE (Supports: mit, apache-2.0, bsd-3-clause, gpl-3.0, mpl-2.0)
+	licFile := fmt.Sprintf("templates/licenses/%s.txt", s.LicenseType)
+	licTmpl, err := templateFS.ReadFile(licFile)
+	if err != nil {
+		// Fallback to mit
+		licTmpl, _ = templateFS.ReadFile("templates/licenses/mit.txt")
+	}
+
+	if len(licTmpl) > 0 {
 		lTmpl, err := template.New("license").Parse(string(licTmpl))
 		if err == nil {
 			var lBuf bytes.Buffer
@@ -78,13 +108,13 @@ func (s *Scaffolder) GenerateFiles() (map[string]string, error) {
 		}
 	}
 
-	// 5. PR Template
+	// 6. PR Template
 	prTmpl, err := templateFS.ReadFile("templates/pr_template.md")
 	if err == nil {
 		files[".github/PULL_REQUEST_TEMPLATE.md"] = string(prTmpl)
 	}
 
-	// 6. Issue Forms
+	// 7. Issue Forms
 	bugReport, err := templateFS.ReadFile("templates/issue_forms/bug_report.yml")
 	if err == nil {
 		files[".github/ISSUE_TEMPLATE/bug_report.yml"] = string(bugReport)
@@ -100,7 +130,7 @@ func (s *Scaffolder) GenerateFiles() (map[string]string, error) {
 		files[".github/ISSUE_TEMPLATE/config.yml"] = string(configYaml)
 	}
 
-	// 7. cbog.yml configuration
+	// 8. cbog.yml configuration
 	cbogCfg, err := templateFS.ReadFile("templates/cbog.yml")
 	if err == nil {
 		files[".github/cbog.yml"] = string(cbogCfg)

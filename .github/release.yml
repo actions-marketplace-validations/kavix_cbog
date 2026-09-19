@@ -1,0 +1,26 @@
+changelog:
+  categories:
+    - title: "Features & Enhancements"
+      labels:
+        - "enhancement"
+        - "kind/feature"
+    - title: "Bug Fixes"
+      labels:
+        - "bug"
+        - "kind/bug"
+    - title: "Documentation"
+      labels:
+        - "documentation"
+        - "area/docs"
+    - title: "Governance & Automation"
+      labels:
+        - "area/ci"
+        - "automation"
+    - title: "Dependency Updates"
+      labels:
+        - "dependencies"
+  exclude:
+    labels:
+      - "duplicate"
+      - "invalid"
+      - "wontfix"

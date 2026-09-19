@@ -12,8 +12,10 @@ inputs:
     default: ${{ github.token }}
   mode:
     description: 'Execution mode: bot (event processing) or scaffold-oss-docs (generates community guidelines PR)'
+  license:
+    description: 'Open source license to generate: mit, apache-2.0, bsd-3-clause, gpl-3.0, mpl-2.0'
     required: false
-    default: 'bot'
+    default: 'mit'
 
 runs:
   using: 'composite'
@@ -23,6 +25,7 @@ runs:
       env:
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
         INPUT_MODE: ${{ inputs.mode }}
+        INPUT_LICENSE: ${{ inputs.license }}
         GITHUB_ACTION_PATH: ${{ github.action_path }}
       run: |
         OS="$(uname -s | tr '[:upper:]' '[:lower:]')"

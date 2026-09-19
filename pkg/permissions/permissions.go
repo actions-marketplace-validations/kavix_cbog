@@ -15,7 +15,7 @@ func HasWriteAccess(ctx context.Context, client *github.Client, owner, repo, use
 	}
 
 	level := perm.GetPermission()
-	return level == "admin" || level == "write", nil
+	return level == "admin" || level == "write" || level == "maintain", nil
 }
 
 // CanApproveOrLGTM checks if the user is authorized to /lgtm or /approve.

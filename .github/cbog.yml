@@ -1,0 +1,43 @@
+# cbog configuration file
+version: 1
+
+plugins:
+  # Slash commands: /lgtm, /approve, /hold, /merge
+  commands:
+    enabled: true
+    allow_self_approval: false
+    default_merge_method: squash
+
+  # Contributor issue claiming
+  claim:
+    enabled: true
+    max_issues_per_user: 3
+
+  # Welcome greeting for first-time contributors
+  welcome:
+    enabled: true
+    issue_message: "Welcome @{{.User}}. Thank you for opening an issue in {{.Repo}}. A maintainer will review it shortly."
+    pr_message: "Welcome @{{.User}}. Thank you for submitting your first pull request to {{.Repo}}."
+
+  # Automatic PR size labeling
+  size:
+    enabled: true
+    xs: 10
+    s: 30
+    m: 100
+    l: 500
+    xl: 1000
+
+  # Conventional commit title linter
+  title_lint:
+    enabled: true
+    types: ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"]
+
+  # Automatic area labeling
+  auto_label:
+    enabled: true
+    rules:
+      - label: "documentation"
+        paths: ["docs/**", "**/*.md"]
+      - label: "enhancement"
+        paths: ["pkg/plugins/**", "pkg/commands/**"]

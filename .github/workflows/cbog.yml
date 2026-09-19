@@ -1,0 +1,28 @@
+name: cbog
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+jobs:
+  cbog:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+      statuses: write
+      checks: read
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run cbog
+        uses: ./
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mode: 'bot'

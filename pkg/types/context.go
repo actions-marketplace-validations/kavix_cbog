@@ -12,6 +12,8 @@ type CommandType string
 const (
 	CmdAssign   CommandType = "assign"
 	CmdUnassign CommandType = "unassign"
+	CmdClaim    CommandType = "claim"
+	CmdUnclaim  CommandType = "unclaim"
 	CmdLGTM     CommandType = "lgtm"
 	CmdApprove  CommandType = "approve"
 	CmdHold     CommandType = "hold"
@@ -29,17 +31,18 @@ type ParsedCommand struct {
 	Raw      string
 }
 
-// BotContext encapsulates all runtime metadata and clients.
+// BotContext encapsulates all runtime metadata, configurations, and clients.
 type BotContext struct {
-	Ctx         context.Context
-	Client      *github.Client
-	Owner       string
-	Repo        string
-	IssueNumber int
-	CommentID   int64
-	Sender      string
-	IssueAuthor string
-	IsPR        bool
-	CommentBody string
+	Ctx                context.Context
+	Client             *github.Client
+	Owner              string
+	Repo               string
+	IssueNumber        int
+	CommentID          int64
+	Sender             string
+	IssueAuthor        string
+	IsPR               bool
+	CommentBody        string
 	DefaultMergeMethod string
+	Config             interface{} // Loaded *config.Config
 }

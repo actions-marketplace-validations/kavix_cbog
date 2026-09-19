@@ -1,57 +1,115 @@
-# 🤖 Contributor Bot & Universal OSS Scaffolder
+# 🛡️ cbog: Community Bot for Open-source Governance
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/kavindu/contributor-bot-action)](https://goreportcard.com/report/github.com/kavindu/contributor-bot-action)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kavindu/cbog)](https://goreportcard.com/report/github.com/kavindu/cbog)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A blazing-fast, Go-powered GitHub Action that automates CNCF/Kubernetes Prow–style slash commands (`/lgtm`, `/approve`, `/hold`, `/merge`, `/assign`) and auto-scaffolds modern open-source community guidelines for **any programming language**.
+**`cbog`** is a high-performance, modular GitHub Action engineered in **Go** to solve the most pressing challenges of open-source software maintainers and contributors:
+- **Triage Bottlenecks**: Maintainers spend hours assigning issues, checking PR sizes, and verifying commit conventions.
+- **Contributor Friction**: New contributors often don't know where to start or wait days for an issue to be assigned.
+- **Premature Merges & Broken CI**: Merging PRs before reviews or required checks finish breaks the main branch.
+- **Missing OSS Governance**: Many repositories lack clean `CONTRIBUTING.md`, PR checklists, or structured Issue Forms.
 
 ---
 
-## ✨ Key Features
+## 🧩 Modular Plugin Ecosystem
 
-- **⚡ Blazing Fast (<100ms)**: Written in Go and compiled as a standalone static binary (`CGO_ENABLED=0`). Zero Node/npm dependencies, zero Docker overhead.
-- **🛡️ Secure RBAC**: Prevents unauthorized merges and blocks authors from self-approving PRs.
-- **👀 Real-Time Feedback**: Immediate emoji reactions (`👀` for processing, `🚀` for merge success, `+1`, `❌` for errors) and detailed diagnostic comments.
-- **📦 Universal OSS Scaffolder**: Run `mode: scaffold-oss-docs` and the bot will inspect your repository (detecting Go, Python, Rust, Node, Java, etc.) and open a Pull Request with tailored `CONTRIBUTING.md`, PR checklists, and modern GitHub Issue Forms.
-- **🧩 1-Click "Suggested Workflows" Setup**: Ready to be integrated into any repo or organization starter workflow catalog.
+Every feature in `cbog` is decoupled into an isolated, configurable plugin toggled via `.github/cbog.yml`:
+
+| Plugin | What It Solves | Trigger |
+| :--- | :--- | :--- |
+| **`commands`** | CNCF/Prow slash commands (`/lgtm`, `/approve`, `/hold`, `/merge`, `/assign`) | `issue_comment` |
+| **`claim`** | Contributors can self-assign issues with `/claim` and release with `/unclaim` | `issue_comment` |
+| **`welcome`** | Greets first-time contributors with friendly onboarding links | `issues (opened)`, `pull_request (opened)` |
+| **`size`** | Automatically calculates PR line changes and tags `size/XS` ... `size/XL` | `pull_request (opened, sync)` |
+| **`title_lint`** | Validates PR titles against Conventional Commits and sets commit status | `pull_request (opened, sync, edited)` |
+| **`auto_label`** | Applies area labels based on modified file paths (e.g. `docs/**` $\rightarrow$ `area/docs`) | `pull_request (opened, sync)` |
+| **`scaffolder`** | Automatically detects tech stack and opens a PR with `CONTRIBUTING.md`, PR checklists, Issue Forms, and `.github/cbog.yml` | `workflow_dispatch` |
 
 ---
 
-## 📋 Slash Command Reference
-
-Contributors and maintainers can use these commands in issue or pull request comments:
+## 📋 Slash Command Cheat Sheet
 
 | Command | Description | Eligible Roles |
 | :--- | :--- | :--- |
-| `/assign [@user...]` | Assign yourself or mentioned users to the issue/PR | Everyone |
+| `/claim` | Self-assign an open issue | Everyone |
+| `/unclaim` | Release an assigned issue back to the community | Assigned Contributor |
+| `/assign [@user...]` | Assign yourself or mentioned collaborators | Everyone |
 | `/unassign [@user...]` | Remove assignees | Everyone |
 | `/lgtm` | Apply `lgtm` label ("Looks Good To Me") | Maintainers (non-author) |
 | `/lgtm cancel` | Remove `lgtm` label | Maintainers |
-| `/approve` | Apply `approved` label and submit formal GitHub PR Review approval | Maintainers (non-author) |
+| `/approve` | Apply `approved` label and submit formal GitHub PR Review | Maintainers (non-author) |
 | `/approve cancel` | Remove `approved` label | Maintainers |
-| `/hold` | Apply `do-not-merge/hold` to prevent premature merges | Everyone |
+| `/hold` | Apply `do-not-merge/hold` to freeze merging | Everyone |
 | `/hold cancel` | Remove `do-not-merge/hold` label | Everyone |
-| `/merge [squash\|merge\|rebase]` | Safely merge the PR once all checks pass | Maintainers |
-| `/close` | Close an issue or PR | Author / Maintainers |
-| `/reopen` | Reopen a closed issue or PR | Author / Maintainers |
-| `/help` | Print the command cheat sheet | Everyone |
+| `/merge [squash\|merge\|rebase]` | Safely merge the PR once all status checks pass | Maintainers |
+| `/close` / `/reopen` | Close or reopen an issue or PR | Author / Maintainers |
+| `/help` | Print the command reference table | Everyone |
 
 ---
 
-## 🚀 Quickstart: Adding to Your Repository
+## ⚙️ Repository Configuration (`.github/cbog.yml`)
 
-Add this file to `.github/workflows/contributor-bot.yml` in your repository:
+Anyone can drop `.github/cbog.yml` into their repository to customize behavior:
 
 ```yaml
-name: Contributor Bot & OSS Helper
+version: 1
+
+plugins:
+  commands:
+    enabled: true
+    allow_self_approval: false
+    default_merge_method: squash
+
+  claim:
+    enabled: true
+    max_issues_per_user: 3
+
+  welcome:
+    enabled: true
+    issue_message: "👋 Welcome @{{.User}}! Thanks for opening an issue in {{.Repo}}!"
+    pr_message: "🎉 Welcome @{{.User}}! Thanks for opening your first PR in {{.Repo}}!"
+
+  size:
+    enabled: true
+    xs: 10
+    s: 30
+    m: 100
+    l: 500
+    xl: 1000
+
+  title_lint:
+    enabled: true
+    types: ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"]
+
+  auto_label:
+    enabled: true
+    rules:
+      - label: "area/docs"
+        paths: ["docs/**", "**/*.md"]
+      - label: "area/ci"
+        paths: [".github/**"]
+```
+
+---
+
+## 🚀 30-Second Setup in Any Repository
+
+Create `.github/workflows/cbog.yml` in your repository:
+
+```yaml
+name: cbog Open-Source Helper
 
 on:
   issue_comment:
     types: [created]
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Run mode (bot or scaffold-oss-docs)'
+        description: 'Run mode'
         required: true
         default: 'bot'
         type: choice
@@ -60,57 +118,44 @@ on:
           - scaffold-oss-docs
 
 jobs:
-  contributor-bot:
+  cbog:
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
       contents: write
-      statuses: read
+      statuses: write
       checks: read
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Run Contributor Bot
-        uses: kavindu/contributor-bot-action@v1
+      - uses: actions/checkout@v4
+      - name: Run cbog
+        uses: kavindu/cbog@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           mode: ${{ inputs.mode || 'bot' }}
-          merge-method: 'squash'
 ```
 
 ---
 
 ## 🛠️ Auto-Scaffolding Community Guidelines
 
-To auto-generate your repository's `CONTRIBUTING.md`, PR template, and GitHub Issue Forms:
+To scaffold complete community guidelines (`CONTRIBUTING.md`, PR templates, Issue Forms, `.github/cbog.yml`):
 
 1. Go to the **Actions** tab in your repository.
-2. Select **Contributor Bot & OSS Helper**.
-3. Click **Run workflow** $\rightarrow$ select `scaffold-oss-docs`.
-4. The bot will automatically create a branch and open a Pull Request ready for you to review and merge with `/merge`!
+2. Select **cbog Open-Source Helper**.
+3. Click **Run workflow** $\rightarrow$ choose `scaffold-oss-docs`.
+4. `cbog` will detect your project stack and open an automated Pull Request!
 
 ---
 
-## 📦 Publishing to GitHub Marketplace
-
-1. Push this repository to GitHub as a **public** repository.
-2. Navigate to **Releases** $\rightarrow$ **Draft a new release**.
-3. Create a tag (e.g., `v1.0.0` and `v1`).
-4. Check the box **"Publish this Action to the GitHub Marketplace"**.
-5. Select a category (e.g., *Community* and *Automation*), accept terms, and click **Publish release**.
-
----
-
-## 🧪 Local Development & Testing
+## 🧪 Local Testing
 
 ```bash
 # Run unit tests
 go test -v ./...
 
 # Build binary
-go build -o bin/bot ./cmd/bot
+go build -o bin/cbog ./cmd/bot
 ```
 
 ---

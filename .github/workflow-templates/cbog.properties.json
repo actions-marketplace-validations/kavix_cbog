@@ -1,0 +1,10 @@
+{
+  "name": "cbog: Open-Source Contributor Bot & Governance Engine",
+  "description": "Solve open-source maintainer bottlenecks with slash commands (/lgtm, /merge, /claim), PR title linting, auto-sizing, and community guideline scaffolding.",
+  "iconName": "shield",
+  "categories": [
+    "Community",
+    "Automation",
+    "Code quality"
+  ]
+}

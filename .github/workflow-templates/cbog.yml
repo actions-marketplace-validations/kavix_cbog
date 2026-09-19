@@ -1,8 +1,12 @@
-name: Contributor Bot & OSS Helper
+name: cbog Open-Source Helper
 
 on:
   issue_comment:
     types: [created]
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
   workflow_dispatch:
     inputs:
       mode:
@@ -15,21 +19,20 @@ on:
           - scaffold-oss-docs
 
 jobs:
-  contributor-bot:
+  cbog:
     runs-on: ubuntu-latest
     permissions:
       issues: write
       pull-requests: write
       contents: write
-      statuses: read
+      statuses: write
       checks: read
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run Contributor Bot
-        uses: kavindu/contributor-bot-action@v1
+      - name: Run cbog
+        uses: kavindu/cbog@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           mode: ${{ inputs.mode || 'bot' }}
-          merge-method: 'squash'

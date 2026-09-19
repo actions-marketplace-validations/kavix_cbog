@@ -3,7 +3,7 @@ package lexer
 import (
 	"testing"
 
-	"github.com/kavindu/contributor-bot-action/pkg/types"
+	"github.com/kavindu/cbog/pkg/types"
 )
 
 func TestParseCommands(t *testing.T) {

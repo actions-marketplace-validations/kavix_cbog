@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/kavindu/contributor-bot-action/pkg/types"
+	"github.com/kavindu/cbog/pkg/types"
 )
 
 var (
@@ -89,6 +89,22 @@ func ParseCommands(body string) []types.ParsedCommand {
 			commands = append(commands, types.ParsedCommand{
 				Type:     types.CmdUnassign,
 				Args:     assignees,
+				IsCancel: false,
+				Raw:      trimmed,
+			})
+
+		case types.CmdClaim:
+			commands = append(commands, types.ParsedCommand{
+				Type:     types.CmdClaim,
+				Args:     args,
+				IsCancel: false,
+				Raw:      trimmed,
+			})
+
+		case types.CmdUnclaim:
+			commands = append(commands, types.ParsedCommand{
+				Type:     types.CmdUnclaim,
+				Args:     args,
 				IsCancel: false,
 				Raw:      trimmed,
 			})

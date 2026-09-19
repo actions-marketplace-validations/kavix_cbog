@@ -3,7 +3,7 @@ package commands
 import (
 	"log"
 
-	"github.com/kavindu/contributor-bot-action/pkg/types"
+	"github.com/kavindu/cbog/pkg/types"
 )
 
 // Dispatch executes each extracted command.
@@ -16,6 +16,10 @@ func Dispatch(bCtx *types.BotContext, cmds []types.ParsedCommand) error {
 			err = HandleAssign(bCtx, cmd)
 		case types.CmdUnassign:
 			err = HandleUnassign(bCtx, cmd)
+		case types.CmdClaim:
+			err = HandleClaim(bCtx, cmd)
+		case types.CmdUnclaim:
+			err = HandleUnclaim(bCtx, cmd)
 		case types.CmdLGTM:
 			err = HandleLGTM(bCtx, cmd)
 		case types.CmdApprove:

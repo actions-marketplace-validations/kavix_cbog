@@ -1,0 +1,44 @@
+# cbog configuration file
+# Community Bot for Open-source Governance
+version: 1
+
+plugins:
+  # Slash commands: /lgtm, /approve, /hold, /merge, /assign
+  commands:
+    enabled: true
+    allow_self_approval: false
+    default_merge_method: squash
+
+  # Contributor issue self-assignment: /claim and /unclaim
+  claim:
+    enabled: true
+    max_issues_per_user: 3
+
+  # First-time contributor greeting
+  welcome:
+    enabled: true
+    issue_message: "👋 Welcome @{{.User}}! Thank you for opening an issue in {{.Repo}}! A maintainer will triage it shortly."
+    pr_message: "🎉 Welcome @{{.User}}! Thank you for submitting your first Pull Request to {{.Repo}}!"
+
+  # Automatic PR size labeler (size/XS ... size/XL)
+  size:
+    enabled: true
+    xs: 10
+    s: 30
+    m: 100
+    l: 500
+    xl: 1000
+
+  # Conventional commit PR title linter (feat:, fix:, docs:, etc.)
+  title_lint:
+    enabled: true
+    types: ["feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"]
+
+  # Automatic area/component labels based on changed files
+  auto_label:
+    enabled: true
+    rules:
+      - label: "area/docs"
+        paths: ["docs/**", "**/*.md"]
+      - label: "area/ci"
+        paths: [".github/**"]

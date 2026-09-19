@@ -22,6 +22,7 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 			".github/ISSUE_TEMPLATE/bug_report.yml",
 			".github/ISSUE_TEMPLATE/feature_request.yml",
 			".github/ISSUE_TEMPLATE/config.yml",
+			".github/cbog.yml",
 		}
 
 		for _, ef := range expectedFiles {

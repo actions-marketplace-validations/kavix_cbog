@@ -9,10 +9,12 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/contributor-bot-action/pkg/commands"
-	"github.com/kavindu/contributor-bot-action/pkg/lexer"
-	"github.com/kavindu/contributor-bot-action/pkg/scaffolder"
-	"github.com/kavindu/contributor-bot-action/pkg/types"
+	"github.com/kavindu/cbog/pkg/commands"
+	"github.com/kavindu/cbog/pkg/config"
+	"github.com/kavindu/cbog/pkg/lexer"
+	"github.com/kavindu/cbog/pkg/plugins"
+	"github.com/kavindu/cbog/pkg/scaffolder"
+	"github.com/kavindu/cbog/pkg/types"
 	"golang.org/x/oauth2"
 )
 
@@ -23,7 +25,6 @@ func main() {
 	}
 
 	mode := strings.ToLower(getEnv("INPUT_MODE", "bot"))
-	mergeMethod := strings.ToLower(getEnv("INPUT_MERGE_METHOD", "squash"))
 	repoFull := os.Getenv("GITHUB_REPOSITORY")
 	if repoFull == "" {
 		log.Fatal("GITHUB_REPOSITORY environment variable is not set")
@@ -40,7 +41,10 @@ func main() {
 	tc := oauth2.NewClient(ctx, ts)
 	client := github.NewClient(tc)
 
-	// Mode 1: Scaffold OSS Documentation & Community Guidelines
+	// Load repository configuration (.github/cbog.yml)
+	cfg := config.LoadFromRepo(ctx, client, owner, repo, "")
+
+	// Mode 1: Scaffold OSS Community Guidelines & Templates
 	if mode == "scaffold-oss-docs" || mode == "scaffold" {
 		log.Println("Running in OSS Scaffolder mode...")
 		cwd, _ := os.Getwd()
@@ -63,7 +67,7 @@ func main() {
 		return
 	}
 
-	// Mode 2: Bot / Slash Command Execution
+	// Mode 2: Event-driven Bot & Plugin Subsystems
 	eventPath := os.Getenv("GITHUB_EVENT_PATH")
 	if eventPath == "" {
 		log.Fatal("GITHUB_EVENT_PATH environment variable is not set")
@@ -75,39 +79,48 @@ func main() {
 	}
 
 	eventName := os.Getenv("GITHUB_EVENT_NAME")
-	if eventName != "issue_comment" {
-		log.Printf("Ignoring event '%s'. Contributor bot only processes 'issue_comment'.", eventName)
-		return
-	}
+	log.Printf("Processing event: %s", eventName)
 
+	switch eventName {
+	case "issue_comment":
+		handleIssueComment(ctx, client, owner, repo, data, cfg)
+
+	case "issues":
+		handleIssuesEvent(ctx, client, owner, repo, data, cfg)
+
+	case "pull_request":
+		handlePullRequestEvent(ctx, client, owner, repo, data, cfg)
+
+	default:
+		log.Printf("Event %s is not actively watched by cbog. Skipping.", eventName)
+	}
+}
+
+func handleIssueComment(ctx context.Context, client *github.Client, owner, repo string, data []byte, cfg *config.Config) {
 	var event github.IssueCommentEvent
 	if err := json.Unmarshal(data, &event); err != nil {
 		log.Fatalf("Failed to parse issue_comment event: %v", err)
 	}
 
 	if event.GetAction() != "created" {
-		log.Printf("Ignoring comment action '%s' (only 'created' is handled).", event.GetAction())
+		return
+	}
+
+	sender := event.GetSender().GetLogin()
+	if strings.HasSuffix(strings.ToLower(sender), "[bot]") {
 		return
 	}
 
 	comment := event.GetComment()
-	sender := event.GetSender().GetLogin()
 	issue := event.GetIssue()
-
-	// Ignore bot's own comments to avoid infinite loops
-	if strings.HasSuffix(strings.ToLower(sender), "[bot]") {
-		log.Printf("Ignoring comment from bot user: %s", sender)
-		return
-	}
-
 	commentBody := comment.GetBody()
+
 	parsedCmds := lexer.ParseCommands(commentBody)
 	if len(parsedCmds) == 0 {
-		log.Println("No valid slash commands found in comment.")
 		return
 	}
 
-	log.Printf("Found %d command(s) from @%s on issue #%d", len(parsedCmds), sender, issue.GetNumber())
+	log.Printf("Found %d slash command(s) from @%s on #%d", len(parsedCmds), sender, issue.GetNumber())
 
 	bCtx := &types.BotContext{
 		Ctx:                ctx,
@@ -120,14 +133,53 @@ func main() {
 		IssueAuthor:        issue.GetUser().GetLogin(),
 		IsPR:               issue.IsPullRequest(),
 		CommentBody:        commentBody,
-		DefaultMergeMethod: mergeMethod,
+		DefaultMergeMethod: cfg.Plugins.Commands.DefaultMergeMethod,
+		Config:             cfg,
 	}
 
 	if err := commands.Dispatch(bCtx, parsedCmds); err != nil {
 		log.Fatalf("Command dispatch failed: %v", err)
 	}
+}
 
-	log.Println("All commands executed successfully.")
+func handleIssuesEvent(ctx context.Context, client *github.Client, owner, repo string, data []byte, cfg *config.Config) {
+	var event github.IssuesEvent
+	if err := json.Unmarshal(data, &event); err != nil {
+		log.Fatalf("Failed to parse issues event: %v", err)
+	}
+
+	action := event.GetAction()
+	issue := event.GetIssue()
+
+	if action == "opened" {
+		_ = plugins.HandleWelcome(ctx, client, owner, repo, issue, false, cfg.Plugins.Welcome)
+	}
+}
+
+func handlePullRequestEvent(ctx context.Context, client *github.Client, owner, repo string, data []byte, cfg *config.Config) {
+	var event github.PullRequestEvent
+	if err := json.Unmarshal(data, &event); err != nil {
+		log.Fatalf("Failed to parse pull_request event: %v", err)
+	}
+
+	action := event.GetAction()
+	pr := event.GetPullRequest()
+
+	if action == "opened" {
+		// Convert PR user to Issue representation for welcome greeting
+		issue := &github.Issue{
+			Number:            pr.Number,
+			User:              pr.User,
+			AuthorAssociation: pr.AuthorAssociation,
+		}
+		_ = plugins.HandleWelcome(ctx, client, owner, repo, issue, true, cfg.Plugins.Welcome)
+	}
+
+	if action == "opened" || action == "synchronize" || action == "reopened" || action == "edited" {
+		_ = plugins.HandlePRSize(ctx, client, owner, repo, pr, cfg.Plugins.Size)
+		_ = plugins.HandleTitleLint(ctx, client, owner, repo, pr, cfg.Plugins.TitleLint)
+		_ = plugins.HandleAutoLabel(ctx, client, owner, repo, pr, cfg.Plugins.AutoLabel)
+	}
 }
 
 func getEnv(key, defaultVal string) string {

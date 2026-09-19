@@ -67,5 +67,11 @@ func (s *Scaffolder) GenerateFiles() (map[string]string, error) {
 		files[".github/ISSUE_TEMPLATE/config.yml"] = string(configYaml)
 	}
 
+	// 4. cbog.yml configuration
+	cbogCfg, err := templateFS.ReadFile("templates/cbog.yml")
+	if err == nil {
+		files[".github/cbog.yml"] = string(cbogCfg)
+	}
+
 	return files, nil
 }

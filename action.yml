@@ -1,4 +1,4 @@
-name: 'cbog'
+name: 'Community Bot for Open-source Governance (cbog)'
 description: 'Enterprise open-source triage bot with slash commands, contributor claiming, PR sizing, and governance scaffolding'
 author: 'kavix'
 branding:

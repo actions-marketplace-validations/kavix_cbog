@@ -8,10 +8,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// BotIdentityConfig allows users to customize the bot display name and icon URL (.ico or image).
+type BotIdentityConfig struct {
+	Name    string `yaml:"name"`
+	IconURL string `yaml:"icon_url"`
+}
+
 // Config represents the complete .github/cbog.yml configuration file.
 type Config struct {
-	Version int            `yaml:"version"`
-	Plugins PluginsConfig  `yaml:"plugins"`
+	Version int               `yaml:"version"`
+	Bot     BotIdentityConfig `yaml:"bot"`
+	Plugins PluginsConfig     `yaml:"plugins"`
 }
 
 type PluginsConfig struct {
@@ -69,6 +76,10 @@ type AutoLabelRule struct {
 func DefaultConfig() *Config {
 	return &Config{
 		Version: 1,
+		Bot: BotIdentityConfig{
+			Name:    "cbog",
+			IconURL: "",
+		},
 		Plugins: PluginsConfig{
 			Commands: CommandsConfig{
 				Enabled:            true,

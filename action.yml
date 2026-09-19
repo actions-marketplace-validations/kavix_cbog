@@ -16,6 +16,14 @@ inputs:
     description: 'Open source license to generate: mit, apache-2.0, bsd-3-clause, gpl-3.0, mpl-2.0'
     required: false
     default: 'mit'
+  bot-name:
+    description: 'Custom display name for the bot (e.g. k8s-ci-robot, cbog)'
+    required: false
+    default: 'cbog'
+  bot-icon-url:
+    description: 'Custom icon URL (.ico or image) for bot branding'
+    required: false
+    default: ''
 
 runs:
   using: 'composite'
@@ -26,6 +34,8 @@ runs:
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
         INPUT_MODE: ${{ inputs.mode }}
         INPUT_LICENSE: ${{ inputs.license }}
+        INPUT_BOT_NAME: ${{ inputs.bot-name }}
+        INPUT_BOT_ICON_URL: ${{ inputs.bot-icon-url }}
         GITHUB_ACTION_PATH: ${{ github.action_path }}
       run: |
         OS="$(uname -s | tr '[:upper:]' '[:lower:]')"

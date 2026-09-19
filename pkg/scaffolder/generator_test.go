@@ -9,7 +9,7 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 	stacks := []TechStack{StackGo, StackNode, StackPython, StackRust, StackUniversal}
 
 	for _, stack := range stacks {
-		scaff := NewScaffolder(stack, "kavix", "mit")
+		scaff := NewScaffolder(stack, "kavix", "mit", "my-test-bot", "https://example.com/icon.ico")
 		files, err := scaff.GenerateFiles()
 		if err != nil {
 			t.Fatalf("failed to generate files for stack %s: %v", stack, err)
@@ -44,6 +44,12 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 		if !strings.Contains(contrib, "/lgtm") || !strings.Contains(contrib, "/merge") || !strings.Contains(contrib, "/claim") {
 			t.Errorf("CONTRIBUTING.md is missing command cheat sheet for stack %s", stack)
 		}
+
+		// Verify custom bot identity is formatted into .github/cbog.yml
+		cbogYaml := files[".github/cbog.yml"]
+		if !strings.Contains(cbogYaml, "my-test-bot") || !strings.Contains(cbogYaml, "https://example.com/icon.ico") {
+			t.Errorf(".github/cbog.yml missing custom bot identity: %s", cbogYaml)
+		}
 	}
 }
 
@@ -57,7 +63,7 @@ func TestLicenseTypes(t *testing.T) {
 	}
 
 	for licKey, expectedSubstring := range licenses {
-		scaff := NewScaffolder(StackGo, "kavix", licKey)
+		scaff := NewScaffolder(StackGo, "kavix", licKey, "cbog", "")
 		files, err := scaff.GenerateFiles()
 		if err != nil {
 			t.Fatalf("failed to generate for license %s: %v", licKey, err)

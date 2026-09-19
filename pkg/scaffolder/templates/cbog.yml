@@ -2,6 +2,11 @@
 # Community Bot for Open-source Governance
 version: 1
 
+# Custom bot display name and icon URL (.ico or image)
+bot:
+  name: "{{.BotName}}"
+  icon_url: "{{.BotIconURL}}"
+
 plugins:
   # Slash commands: /lgtm, /approve, /hold, /merge, /assign
   commands:

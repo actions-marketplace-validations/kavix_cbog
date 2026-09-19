@@ -17,13 +17,24 @@ type Scaffolder struct {
 	Stack       TechStack
 	Owner       string
 	LicenseType string
+	BotName     string
+	BotIconURL  string
 }
 
-func NewScaffolder(stack TechStack, owner, licenseType string) *Scaffolder {
+func NewScaffolder(stack TechStack, owner, licenseType, botName, botIconURL string) *Scaffolder {
 	if licenseType == "" {
 		licenseType = "mit"
 	}
-	return &Scaffolder{Stack: stack, Owner: owner, LicenseType: strings.ToLower(licenseType)}
+	if botName == "" {
+		botName = "cbog"
+	}
+	return &Scaffolder{
+		Stack:       stack,
+		Owner:       owner,
+		LicenseType: strings.ToLower(licenseType),
+		BotName:     botName,
+		BotIconURL:  botIconURL,
+	}
 }
 
 // GenerateFiles generates all community guidelines and issue templates.
@@ -87,7 +98,6 @@ func (s *Scaffolder) GenerateFiles() (map[string]string, error) {
 	licFile := fmt.Sprintf("templates/licenses/%s.txt", s.LicenseType)
 	licTmpl, err := templateFS.ReadFile(licFile)
 	if err != nil {
-		// Fallback to mit
 		licTmpl, _ = templateFS.ReadFile("templates/licenses/mit.txt")
 	}
 
@@ -130,10 +140,13 @@ func (s *Scaffolder) GenerateFiles() (map[string]string, error) {
 		files[".github/ISSUE_TEMPLATE/config.yml"] = string(configYaml)
 	}
 
-	// 8. cbog.yml configuration
-	cbogCfg, err := templateFS.ReadFile("templates/cbog.yml")
+	// 8. cbog.yml configuration with custom bot branding
+	cbogCfgTmpl, err := templateFS.ReadFile("templates/cbog.yml")
 	if err == nil {
-		files[".github/cbog.yml"] = string(cbogCfg)
+		cfgStr := string(cbogCfgTmpl)
+		cfgStr = strings.ReplaceAll(cfgStr, "{{.BotName}}", s.BotName)
+		cfgStr = strings.ReplaceAll(cfgStr, "{{.BotIconURL}}", s.BotIconURL)
+		files[".github/cbog.yml"] = cfgStr
 	}
 
 	return files, nil

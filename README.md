@@ -120,6 +120,11 @@ You can customize or disable any plugin by adding `.github/cbog.yml`:
 ```yaml
 version: 1
 
+# Custom bot display name and icon URL (.ico or image)
+bot:
+  name: "cbog"
+  icon_url: "" # e.g. "https://example.com/favicon.ico"
+
 plugins:
   commands:
     enabled: true

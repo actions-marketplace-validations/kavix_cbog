@@ -1,6 +1,11 @@
 # cbog configuration file
 version: 1
 
+# Custom bot display name and icon URL (.ico or image)
+bot:
+  name: "cbog"
+  icon_url: ""
+
 plugins:
   # Slash commands: /lgtm, /approve, /hold, /merge
   commands:

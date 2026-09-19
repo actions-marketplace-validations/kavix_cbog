@@ -52,7 +52,9 @@ func main() {
 		log.Printf("Detected project tech stack: %s", stack)
 
 		licenseType := getEnv("INPUT_LICENSE", "mit")
-		scaff := scaffolder.NewScaffolder(stack, owner, licenseType)
+		botName := getEnv("INPUT_BOT_NAME", "cbog")
+		botIconURL := getEnv("INPUT_BOT_ICON_URL", "")
+		scaff := scaffolder.NewScaffolder(stack, owner, licenseType, botName, botIconURL)
 		files, err := scaff.GenerateFiles()
 		if err != nil {
 			log.Fatalf("Failed to generate scaffold files: %v", err)

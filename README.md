@@ -173,6 +173,26 @@ plugins:
 
 ---
 
+## Container Image (GitHub Packages)
+
+`cbog` is also published as a container image on GitHub Packages:
+
+```bash
+docker pull ghcr.io/kavix/cbog:latest
+```
+
+You can run it directly:
+
+```bash
+docker run --rm \
+  -e GITHUB_TOKEN="${GITHUB_TOKEN}" \
+  -e GITHUB_REPOSITORY="owner/repo" \
+  -e GITHUB_EVENT_NAME="issue_comment" \
+  ghcr.io/kavix/cbog:latest
+```
+
+---
+
 ## Local Development & Testing
 
 ```bash

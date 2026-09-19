@@ -1,4 +1,4 @@
-name: 🐛 Bug Report
+name: Bug Report
 description: File a bug report to help us improve
 title: "[Bug]: "
 labels: ["kind/bug"]
@@ -6,13 +6,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to report this bug!
+        Thank you for reporting this issue.
   - type: textarea
     id: description
     attributes:
       label: Describe the bug
       description: A clear and concise description of what the bug is.
-      placeholder: Tell us what you see!
     validations:
       required: true
   - type: textarea
@@ -37,5 +36,5 @@ body:
     id: environment
     attributes:
       label: Environment Info
-      description: OS version, runtime version, etc.
+      description: Operating system, runtime version, etc.
       placeholder: macOS 15.0 / Go 1.27 / Node 20

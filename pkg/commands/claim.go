@@ -38,7 +38,7 @@ func HandleClaim(bCtx *types.BotContext, cmd types.ParsedCommand) error {
 	}
 
 	_ = reactions.AddReaction(bCtx.Ctx, bCtx.Client, bCtx.Owner, bCtx.Repo, bCtx.CommentID, "rocket")
-	return reactions.PostComment(bCtx, fmt.Sprintf("🎉 @%s has claimed this issue! Thanks for contributing! Feel free to ask questions here if you get stuck. Happy hacking! 💻", bCtx.Sender))
+	return reactions.PostComment(bCtx, fmt.Sprintf("@%s has claimed this issue. Please feel free to open a draft pull request when you are ready to share your work.", bCtx.Sender))
 }
 
 // HandleUnclaim handles /unclaim
@@ -50,5 +50,5 @@ func HandleUnclaim(bCtx *types.BotContext, cmd types.ParsedCommand) error {
 	}
 
 	_ = reactions.AddReaction(bCtx.Ctx, bCtx.Client, bCtx.Owner, bCtx.Repo, bCtx.CommentID, "+1")
-	return reactions.PostComment(bCtx, fmt.Sprintf("🔓 @%s has unassigned themselves from this issue. It is now open for other contributors to claim with `/claim`!", bCtx.Sender))
+	return reactions.PostComment(bCtx, fmt.Sprintf("@%s has unassigned themselves from this issue. It is now open for other contributors to claim with `/claim`.", bCtx.Sender))
 }

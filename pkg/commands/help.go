@@ -5,10 +5,12 @@ import (
 	"github.com/kavix/cbog/pkg/types"
 )
 
-const HelpText = `### 🤖 Contributor Bot Commands
+const HelpText = `### Contributor Bot Commands
 
 | Command | Description | Eligible Roles |
 | :--- | :--- | :--- |
+| ` + "`/claim`" + ` | Self-assign an open issue | Everyone |
+| ` + "`/unclaim`" + ` | Release an assigned issue back to the community | Assigned Contributor |
 | ` + "`/assign [@user...]`" + ` | Assign self or mentioned users | Everyone |
 | ` + "`/unassign [@user...]`" + ` | Unassign self or mentioned users | Everyone |
 | ` + "`/lgtm [cancel]`" + ` | Add or remove ` + "`lgtm`" + ` label | Maintainers (non-author) |

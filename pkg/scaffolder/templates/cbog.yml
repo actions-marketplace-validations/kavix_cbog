@@ -17,8 +17,8 @@ plugins:
   # First-time contributor greeting
   welcome:
     enabled: true
-    issue_message: "👋 Welcome @{{.User}}! Thank you for opening an issue in {{.Repo}}! A maintainer will triage it shortly."
-    pr_message: "🎉 Welcome @{{.User}}! Thank you for submitting your first Pull Request to {{.Repo}}!"
+    issue_message: "Welcome @{{.User}}. Thank you for opening an issue in {{.Repo}}. A maintainer will review it shortly."
+    pr_message: "Welcome @{{.User}}. Thank you for submitting your first pull request to {{.Repo}}."
 
   # Automatic PR size labeler (size/XS ... size/XL)
   size:

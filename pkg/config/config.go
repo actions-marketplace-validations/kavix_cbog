@@ -82,8 +82,8 @@ func DefaultConfig() *Config {
 			},
 			Welcome: WelcomeConfig{
 				Enabled:      true,
-				IssueMessage: "👋 Welcome @{{.User}}! Thank you for opening an issue in {{.Repo}}! A maintainer will triage it shortly.",
-				PRMessage:    "🎉 Welcome @{{.User}}! Thank you for submitting your first Pull Request to {{.Repo}}! Please make sure you've signed off on your commits and followed our checklist.",
+				IssueMessage: "Welcome @{{.User}}. Thank you for opening an issue in {{.Repo}}. A maintainer will review it shortly.",
+				PRMessage:    "Welcome @{{.User}}. Thank you for submitting your first pull request to {{.Repo}}. Please ensure your changes pass all tests and follow our contributing guidelines.",
 			},
 			Size: SizeConfig{
 				Enabled: true,

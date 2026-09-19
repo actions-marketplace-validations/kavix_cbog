@@ -58,12 +58,12 @@ func HandleMerge(bCtx *types.BotContext, cmd types.ParsedCommand) error {
 
 	if err != nil {
 		_ = reactions.AddReaction(bCtx.Ctx, bCtx.Client, bCtx.Owner, bCtx.Repo, bCtx.CommentID, "-1")
-		return reactions.PostComment(bCtx, fmt.Sprintf("⚠️ **Merge failed for @%s**: `%v`.\nPlease ensure required status checks have passed, approvals are satisfied, and there are no merge conflicts.", bCtx.Sender, err))
+		return reactions.PostComment(bCtx, fmt.Sprintf("**Merge failed for @%s**: `%v`.\nPlease ensure required status checks have passed, approvals are satisfied, and there are no merge conflicts.", bCtx.Sender, err))
 	}
 
 	if res.GetMerged() {
 		return reactions.AddReaction(bCtx.Ctx, bCtx.Client, bCtx.Owner, bCtx.Repo, bCtx.CommentID, "rocket")
 	}
 
-	return reactions.PostComment(bCtx, fmt.Sprintf("⚠️ Merge could not be completed: %s", res.GetMessage()))
+	return reactions.PostComment(bCtx, fmt.Sprintf("Merge could not be completed: %s", res.GetMessage()))
 }

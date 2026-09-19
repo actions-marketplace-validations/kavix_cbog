@@ -9,7 +9,7 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 	stacks := []TechStack{StackGo, StackNode, StackPython, StackRust, StackUniversal}
 
 	for _, stack := range stacks {
-		scaff := NewScaffolder(stack)
+		scaff := NewScaffolder(stack, "kavix")
 		files, err := scaff.GenerateFiles()
 		if err != nil {
 			t.Fatalf("failed to generate files for stack %s: %v", stack, err)
@@ -18,6 +18,9 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 		// Verify essential files exist
 		expectedFiles := []string{
 			"CONTRIBUTING.md",
+			"CODE_OF_CONDUCT.md",
+			"SECURITY.md",
+			"LICENSE",
 			".github/PULL_REQUEST_TEMPLATE.md",
 			".github/ISSUE_TEMPLATE/bug_report.yml",
 			".github/ISSUE_TEMPLATE/feature_request.yml",
@@ -37,7 +40,7 @@ func TestScaffolderGenerateFiles(t *testing.T) {
 
 		// Verify bot slash command cheat sheet is inside CONTRIBUTING.md
 		contrib := files["CONTRIBUTING.md"]
-		if !strings.Contains(contrib, "/lgtm") || !strings.Contains(contrib, "/merge") || !strings.Contains(contrib, "/assign") {
+		if !strings.Contains(contrib, "/lgtm") || !strings.Contains(contrib, "/merge") || !strings.Contains(contrib, "/claim") {
 			t.Errorf("CONTRIBUTING.md is missing command cheat sheet for stack %s", stack)
 		}
 	}

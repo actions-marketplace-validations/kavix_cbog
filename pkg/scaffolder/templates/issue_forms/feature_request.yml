@@ -1,4 +1,4 @@
-name: 💡 Feature Request
+name: Feature Request
 description: Suggest an idea or feature for this project
 title: "[Feature]: "
 labels: ["kind/feature"]
@@ -6,24 +6,23 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for suggesting a new feature!
+        Thank you for suggesting a feature.
   - type: textarea
     id: problem
     attributes:
-      label: Is your feature request related to a problem?
-      description: A clear and concise description of what the problem is.
-      placeholder: I'm always frustrated when...
+      label: Problem Statement
+      description: A clear and concise description of the problem this feature solves.
     validations:
       required: true
   - type: textarea
     id: solution
     attributes:
-      label: Describe the solution you'd like
-      description: A clear and concise description of what you want to happen.
+      label: Proposed Solution
+      description: A clear and concise description of what you would like to happen.
     validations:
       required: true
   - type: textarea
     id: alternatives
     attributes:
-      label: Alternatives you've considered
+      label: Alternatives Considered
       description: Any alternative solutions or features you have considered.

@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/config"
+	"github.com/kavix/cbog/pkg/config"
 )
 
 // HandleAutoLabel inspects files changed in PR and applies area/component labels based on configured rules.

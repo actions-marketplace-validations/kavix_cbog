@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/config"
+	"github.com/kavix/cbog/pkg/config"
 )
 
 var allSizeLabels = []string{"size/XS", "size/S", "size/M", "size/L", "size/XL"}

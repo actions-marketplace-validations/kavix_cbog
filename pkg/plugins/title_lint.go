@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/config"
+	"github.com/kavix/cbog/pkg/config"
 )
 
 // HandleTitleLint validates PR title format against Conventional Commits.

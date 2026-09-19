@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/permissions"
-	"github.com/kavindu/cbog/pkg/reactions"
-	"github.com/kavindu/cbog/pkg/types"
+	"github.com/kavix/cbog/pkg/permissions"
+	"github.com/kavix/cbog/pkg/reactions"
+	"github.com/kavix/cbog/pkg/types"
 )
 
 // HandleClose closes an issue or PR

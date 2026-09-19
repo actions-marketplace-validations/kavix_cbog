@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/types"
+	"github.com/kavix/cbog/pkg/types"
 )
 
 // AddReaction adds an emoji reaction to the comment that triggered the action.

@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/kavindu/cbog/pkg/types"
+	"github.com/kavix/cbog/pkg/types"
 )
 
 var (

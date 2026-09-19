@@ -3,7 +3,7 @@ package commands
 import (
 	"log"
 
-	"github.com/kavindu/cbog/pkg/types"
+	"github.com/kavix/cbog/pkg/types"
 )
 
 // Dispatch executes each extracted command.

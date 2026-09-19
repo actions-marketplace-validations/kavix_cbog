@@ -9,12 +9,12 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/commands"
-	"github.com/kavindu/cbog/pkg/config"
-	"github.com/kavindu/cbog/pkg/lexer"
-	"github.com/kavindu/cbog/pkg/plugins"
-	"github.com/kavindu/cbog/pkg/scaffolder"
-	"github.com/kavindu/cbog/pkg/types"
+	"github.com/kavix/cbog/pkg/commands"
+	"github.com/kavix/cbog/pkg/config"
+	"github.com/kavix/cbog/pkg/lexer"
+	"github.com/kavix/cbog/pkg/plugins"
+	"github.com/kavix/cbog/pkg/scaffolder"
+	"github.com/kavix/cbog/pkg/types"
 	"golang.org/x/oauth2"
 )
 

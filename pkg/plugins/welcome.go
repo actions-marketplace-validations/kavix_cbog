@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/config"
+	"github.com/kavix/cbog/pkg/config"
 )
 
 // HandleWelcome checks if an issue or PR author is a first-time contributor and posts a greeting.
@@ -33,7 +33,7 @@ func HandleWelcome(ctx context.Context, client *github.Client, owner, repo strin
 	msg = strings.ReplaceAll(msg, "{{.Repo}}", repo)
 
 	_, _, err := client.Issues.CreateComment(ctx, owner, repo, issue.GetNumber(), &github.IssueComment{
-		Body: github.String(fmt.Sprintf("%s\n\n*Powered by [cbog](https://github.com/kavindu/cbog)*", msg)),
+		Body: github.String(fmt.Sprintf("%s\n\n*Powered by [cbog](https://github.com/kavix/cbog)*", msg)),
 	})
 	return err
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/go-github/v60/github"
-	"github.com/kavindu/cbog/pkg/types"
+	"github.com/kavix/cbog/pkg/types"
 )
 
 // HasWriteAccess checks if a given user has write or admin permissions in the repository.

@@ -3,9 +3,9 @@ package commands
 import (
 	"fmt"
 
-	"github.com/kavindu/cbog/pkg/permissions"
-	"github.com/kavindu/cbog/pkg/reactions"
-	"github.com/kavindu/cbog/pkg/types"
+	"github.com/kavix/cbog/pkg/permissions"
+	"github.com/kavix/cbog/pkg/reactions"
+	"github.com/kavix/cbog/pkg/types"
 )
 
 const LabelLGTM = "lgtm"

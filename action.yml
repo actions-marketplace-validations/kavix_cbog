@@ -1,6 +1,6 @@
 name: 'cbog: Community Bot for Open-source Governance'
 description: 'Enterprise open-source triage bot with modular plugins (/lgtm, /merge, /claim, auto-size, PR title lint, and universal scaffolding)'
-author: 'Kavindu'
+author: 'kavix'
 branding:
   icon: 'shield'
   color: 'blue'

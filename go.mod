@@ -1,4 +1,4 @@
-module github.com/kavindu/cbog
+module github.com/kavix/cbog
 
 go 1.27.1
 
